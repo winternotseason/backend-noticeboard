@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const User = require('../schemas/users')
+const User = require("../schemas/users");
+const { isLoggedin, isNotLoggedin } = require("../middlewares");
+const bcrypt = require("bcrypt");
+const { joinUser } = require("../controllers/join");
 
 router.use((req, res, next) => {
-  res.locals.user = null;
+  res.locals.user = req.user;
   next();
 });
 
@@ -11,20 +14,6 @@ router.route("/").get((req, res, next) => {
   res.json({ name: 1 });
 });
 
-router.route("/join").post(async (req, res, next) => {
-  console.log(req.body);
-  const { id, nickname, password } = req.body;
-  try {
-    const user = new User({
-      id,
-      nickname,
-      password,
-    });
-    user.save()
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
+router.route("/join").post(joinUser);
 
 module.exports = router;
