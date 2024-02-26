@@ -9,8 +9,8 @@ const cors = require("cors");
 const passport = require("passport");
 
 dotenv.config(); // process.env
-const pageRouter = require("./routes/page");
 const authRouter = require("./routes/auth");
+const pageRouter = require("./routes/page");
 const passportConfig = require("./passport");
 connect();
 const { format } = require("path");
@@ -42,6 +42,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/", pageRouter);
+app.use("/auth", authRouter);
 
 // router들에서 안걸리면 아래로
 app.use((req, res, next) => {

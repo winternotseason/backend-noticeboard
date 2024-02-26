@@ -1,5 +1,5 @@
 const passport = require("passport");
-// const local = require('./localStrategy')
+const local = require("./localStrategy");
 // const kakao = require("./kakaoStrategy");
 const User = require("../schemas/users");
 
@@ -15,6 +15,6 @@ module.exports = () => {
       })
       .catch((err) => done(err));
   });
-
-//   local();
 };
+
+local();
