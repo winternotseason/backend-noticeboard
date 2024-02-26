@@ -27,19 +27,18 @@ app.use(express.static(path.join(__dirname, "public"))); // 프론트에서 publ
 app.use(express.json()); // json 요청
 app.use(express.urlencoded({ extended: false })); // form 요청
 app.use(cookieParser(process.env.COOKIE_SECRET)); // cookie 처리
-app.use(
-  session({
-    resave: false,
-    saveUninitialized: false,
-    secrest: process.env.COOKIE_SECRET,
-    cookie: {
-      httpOnly: true,
-      secure: false,
-    },
-  })
-);
+app.use(session({
+  resave: false,
+  saveUninitialized: false,
+  secret: process.env.COOKIE_SECRET,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+  },
+}));
 app.use(passport.initialize());
 app.use(passport.session());
+// 브라우저에 connect.sid=1234134135
 
 app.use("/", pageRouter);
 app.use("/auth", authRouter);
