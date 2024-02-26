@@ -31,7 +31,7 @@ exports.login = (req, res, next) => {
     }
     if (!user) {
       // 로직에러
-      return res.redirect(`/?loginError=${info.message}`);
+      return res.status(200).json({status:003, message:'회원정보가 다릅니다.'});
     }
     return req.login(user, (loginError) => {
       // 로그인 성공
