@@ -3,15 +3,15 @@ const bcrypt = require("bcryptjs");
 const passport = require("passport");
 
 exports.join = async (req, res, next) => {
-  const { id, nickname, password } = req.body;
+  const { email, nickname, password } = req.body;
   try {
-    const exUser = await User.findOne({ where: { id } });
+    const exUser = await User.findOne( {where:{ email }} );
     if (exUser) {
       return res.redirect("/join?error=exist");
     }
     const hash = await bcrypt.hash(password, 10);
     await User.create({
-      id,
+      email,
       nickname,
       password: hash,
     });
@@ -34,9 +34,7 @@ exports.login = (req, res, next) => {
     }
     if (!user) {
       // 로직에러
-      return res
-        .status(200)
-        .json({ status: 003, message: "회원정보가 다릅니다." });
+      return res.json({ status: 003, message: "회원정보가 다릅니다." });
     }
     return req.login(user, (loginError) => {
       // 로그인 성공
@@ -51,6 +49,6 @@ exports.login = (req, res, next) => {
 
 exports.logout = (req, res) => {
   req.logout(() => {
-    res.json({ message: 1 });
+    res.send();
   });
 };

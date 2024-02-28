@@ -12,17 +12,28 @@ router.use((req, res, next) => {
   next(); // next 빼먹는 실수 주의
 });
 
-router.route("/").get(async (req, res, next) => {
+router.route("/post").get(async (req, res, next) => {
   // res.json (유저 정보)
   try {
     const posts = await Post.findAll({
       include: {
         model: User,
-        attributes: ["id", "nick"],
+        attributes: ["email", "nickname"],
       },
       order: [["createdAt", "DESC"]],
     });
     res.json(posts);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.route("/").get(async (req, res, next) => {
+  // res.json (유저 정보)
+  try {
+    const users = await User.findAll();
+    res.json(users);
   } catch (err) {
     console.error(err);
     next(err);

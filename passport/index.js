@@ -6,12 +6,12 @@ const User = require("../models/user")
 module.exports = () => {
   passport.serializeUser((user, done) => {
     // user === exUser
-    done(null, user.id);
+    done(null, user.email);
   });
   // { 세션 쿠키 : 유저아이디 } => 메모리 저장
 
-  passport.deserializeUser((id, done) => {
-    User.findOne({ id })
+  passport.deserializeUser((email, done) => {
+    User.findOne({ email })
       .then((user) => {
         done(null, user);
       })

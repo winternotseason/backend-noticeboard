@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "dbwls0901",
-    "database": "NOTICEBOARD",
+    "database": "noticeapp",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },

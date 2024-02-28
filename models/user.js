@@ -5,8 +5,8 @@ class User extends Sequelize.Model {
     // 첫번째 인수는 컬럼 정의, 두번째 인수는 모델 설정
     User.init(
       {
-        name: {
-          type: Sequelize.STRING(20),
+        email: {
+          type: Sequelize.STRING(40),
           allowNull: false,
           unique: true,
         },
