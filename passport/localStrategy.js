@@ -1,8 +1,8 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const User = require("../schemas/users");
+const User = require("../models/user");
 const bcrypt = require("bcrypt");
-const { doesNotMatch } = require("assert");
+
 
 module.exports = () => {
   passport.use(

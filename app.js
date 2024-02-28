@@ -4,15 +4,14 @@ const morgan = require("morgan");
 const path = require("path");
 const session = require("express-session");
 const dotenv = require("dotenv");
-const connect = require("./schemas");
 const cors = require("cors");
 const passport = require("passport");
+const { sequelize } = require("./models");
 
 dotenv.config(); // process.env
 const authRouter = require("./routes/auth");
 const pageRouter = require("./routes/page");
 const passportConfig = require("./passport");
-connect();
 const { format } = require("path");
 
 const app = express();
@@ -20,6 +19,14 @@ passportConfig();
 
 app.use(morgan({ format: "dev" })); // 배포할땐 combined
 app.set("port", process.env.PORT || 8001);
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log("데이터베이스 연결 성공");
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
@@ -27,16 +34,19 @@ app.use(express.static(path.join(__dirname, "public"))); // 프론트에서 publ
 app.use(express.json()); // json 요청
 app.use(express.urlencoded({ extended: false })); // form 요청
 app.use(cookieParser(process.env.COOKIE_SECRET)); // cookie 처리
-app.use(session({
-  resave: false,
-  saveUninitialized: false,
-  secret: process.env.COOKIE_SECRET,
-  cookie: {
-    httpOnly: true,
-    secure: false,
-    sameSite: 'none'
-  },
-}));
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+      sameSite: "none",
+      maxAge: 3600,
+    },
+  })
+);
 app.use(passport.initialize());
 app.use(passport.session());
 // 브라우저에 connect.sid=1234134135
@@ -46,7 +56,7 @@ app.use("/auth", authRouter);
 
 // router들에서 안걸리면 아래로
 app.use((req, res, next) => {
-  const error = new Error("라우터가 없습니다.");
+  const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
   error.status = 404;
   next(error);
 });
@@ -55,7 +65,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = process.env.NODE_ENV !== "production" ? err : {};
-  res.status(406);
+  res.status(err.status || 500);
 });
 
 app.listen(app.get("port"), () => {

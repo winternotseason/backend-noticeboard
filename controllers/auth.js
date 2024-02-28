@@ -1,4 +1,4 @@
-const User = require("../schemas/users");
+const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
 
@@ -15,7 +15,10 @@ exports.join = async (req, res, next) => {
       nickname,
       password: hash,
     });
-    return res.redirect("/");
+    return res.json({
+      status: 200,
+      message: "회원가입 성공",
+    });
   } catch (error) {
     console.error(error);
     next(error);
@@ -31,7 +34,9 @@ exports.login = (req, res, next) => {
     }
     if (!user) {
       // 로직에러
-      return res.status(200).json({status:003, message:'회원정보가 다릅니다.'});
+      return res
+        .status(200)
+        .json({ status: 003, message: "회원정보가 다릅니다." });
     }
     return req.login(user, (loginError) => {
       // 로그인 성공
@@ -39,7 +44,7 @@ exports.login = (req, res, next) => {
         console.error(loginError);
         return next(loginError);
       }
-      return res.redirect("/");
+      return res.send();
     });
   })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 };
