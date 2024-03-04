@@ -38,6 +38,7 @@ exports.login = (req, res, next) => {
     }
     return req.login(user, (loginError) => {
       // 로그인 성공
+      console.log(user)
       if (loginError) {
         console.error(loginError);
         return next(loginError);
