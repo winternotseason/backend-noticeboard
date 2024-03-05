@@ -40,8 +40,13 @@ router.route("/").get(async (req, res, next) => {
   }
 });
 
-router.route('/userinfo').get((req,res,next) => {
-  req
-})
+router.route("/usernick").post(async (req, res, next) => {
+  console.log(req.body)
+  const user = await User.findOne({
+    where: {email: req.body.email},
+    attributes:['nickname']
+  }).then(user => res.json({nickname : user.dataValues.nickname}))
+  
+});
 
 module.exports = router;
