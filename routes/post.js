@@ -7,15 +7,15 @@ const path = require("path");
 const { afterUploadImage, uploadPost } = require("../controllers/post");
 
 try {
-  fs.readdirSync("uploads");
+  fs.readdirSync("public/uploads");
 } catch (err) {
-  fs.mkdirSync("uploads");
+  fs.mkdirSync("public/uploads");
 }
 
 const upload = multer({
   storage: multer.diskStorage({
     destination(req, file, cb) {
-      cb(null, "uploads/");
+      cb(null, "public/uploads/");
     },
     filename(req, file, cb) {
       const ext = path.extname(file.originalname);

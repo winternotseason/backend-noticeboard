@@ -4,6 +4,7 @@ const local = require("./localStrategy");
 const User = require("../models/user");
 
 module.exports = () => {
+  // 로그인에 성공하면, serializeUser 실행
   passport.serializeUser((user, done) => {
     done(null, user.id);
   });

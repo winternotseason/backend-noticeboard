@@ -7,19 +7,19 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const passport = require("passport");
 const { sequelize } = require("./models");
-const https = require('https');
-const fs = require('fs')
+const https = require("https");
+const fs = require("fs");
 
 const options = {
-  key: fs.readFileSync('./_wildcard.example.dev+3-key.pem'),
-  cert: fs.readFileSync('./_wildcard.example.dev+3.pem')
+  key: fs.readFileSync("./_wildcard.example.dev+3-key.pem"),
+  cert: fs.readFileSync("./_wildcard.example.dev+3.pem"),
 };
-
 
 dotenv.config(); // process.env
 const authRouter = require("./routes/auth");
-const pageRouter = require("./routes/page"); 
-const postRouter = require('./routes/post')
+const pageRouter = require("./routes/page");
+const postRouter = require("./routes/post");
+const profileRouter = require("./routes/Profile");
 const passportConfig = require("./passport");
 const { format } = require("path");
 
@@ -40,7 +40,8 @@ sequelize
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use('/img', express.static(path.join(__dirname, 'uploads'))); // 프론트에서 public 폴더 허용
+app.use("/img", express.static(path.join(__dirname, "uploads")));
+app.use("/profileimg", express.static(path.join(__dirname, "uploads/profiles"))); // 프론트에서 public 폴더 허용
 app.use(express.json()); // json 요청
 app.use(express.urlencoded({ extended: false })); // form 요청
 app.use(cookieParser(process.env.COOKIE_SECRET)); // cookie 처리
@@ -64,6 +65,7 @@ app.use(passport.session());
 app.use("/", pageRouter);
 app.use("/auth", authRouter);
 app.use("/post", postRouter);
+app.use("/profile", profileRouter);
 
 // router들에서 안걸리면 아래로
 app.use((req, res, next) => {
@@ -79,4 +81,4 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
 });
 
-https.createServer(options, app).listen(app.get('port'))
+https.createServer(options, app).listen(app.get("port"));

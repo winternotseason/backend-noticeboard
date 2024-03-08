@@ -1,15 +1,15 @@
 const jwt = require("jsonwebtoken");
 
 const tokenService = {
-  getToken(id) {
-    return jwt.sign({ id }, "SECRET_KEY", {
-      expiresIn: "1d",
+  getAccessToken(email) {
+    return jwt.sign({ email }, "SECRET_KEY", {
+      expiresIn: "3h",
     });
   },
-  getPayload(token) {
-      return jwt.verify(token, 'SECRET_KEY')
-  }
-};
 
+  getRefreshToken(email) {
+    return jwt.sign({ email }, "SECRET_KEY", { expiresIn: "1d" });
+  },
+};
 
 module.exports = tokenService;
