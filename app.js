@@ -11,8 +11,8 @@ const https = require("https");
 const fs = require("fs");
 
 const options = {
-  key: fs.readFileSync("./_wildcard.example.dev+3-key.pem"),
-  cert: fs.readFileSync("./_wildcard.example.dev+3.pem"),
+  key: fs.readFileSync("./cert/_wildcard.example.dev+3-key.pem"),
+  cert: fs.readFileSync("./cert/_wildcard.example.dev+3.pem"),
 };
 
 dotenv.config(); // process.env
@@ -37,14 +37,17 @@ sequelize
     console.error(err);
   });
 
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ origin: "https://localhost:3000", credentials: true }));
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/img", express.static(path.join(__dirname, "uploads")));
-app.use("/profileimg", express.static(path.join(__dirname, "uploads/profiles"))); // 프론트에서 public 폴더 허용
+app.use(
+  "/profileimg",
+  express.static(path.join(__dirname, "uploads/profiles"))
+); // 프론트에서 public 폴더 허용
 app.use(express.json()); // json 요청
 app.use(express.urlencoded({ extended: false })); // form 요청
-app.use(cookieParser(process.env.COOKIE_SECRET)); // cookie 처리
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
   session({
     resave: false,
@@ -53,8 +56,7 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: false,
-      sameSite: "none",
-      maxAge: 3600,
+      maxAge: 1000 * 60 * 100 // 10분 후 쿠키 폭피
     },
   })
 );

@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
-const tokenService = require('../jwt')
+
 
 exports.join = async (req, res, next) => {
   const { email, nickname, password } = req.body;
@@ -44,13 +44,13 @@ exports.login = (req, res, next) => {
         console.error(loginError);
         return next(loginError);
       }
-      return res.send({token : tokenService.getToken(user.id)});
+      return res.send({message : "로그인 성공"});
     });
   })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)
-};
+}
 
 exports.logout = (req, res) => {
   req.logout(() => {
-    res.send();
+    res.send({message:'로그아웃 성공'})
   });
 };

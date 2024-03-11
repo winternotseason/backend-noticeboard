@@ -33,8 +33,10 @@ class User extends Sequelize.Model {
     );
   }
   static associate(db) {
-    db.User.hasMany(db.Post); // 사용자와 게시글은 일대다 관계
+    db.User.hasMany(db.Post, { foreignKey : 'writer', sourceKey : 'id'}); // 사용자와 게시글은 일대다 관계
   }
 }
+
+
 
 module.exports = User;

@@ -9,7 +9,7 @@ class Post extends Sequelize.Model {
           allowNull: false,
         },
         content: {
-          type: Sequelize.STRING(140),
+          type: Sequelize.STRING(15000),
           allowNull: false,
         },
         img: {
@@ -31,7 +31,7 @@ class Post extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.Post.belongsTo(db.User); // 게시글은 유저한테 속해있음
+    db.Post.belongsTo(db.User, { foreignKey : 'writer', targetKey : 'id'}); // 게시글은 유저한테 속해있음
   }
 }
 
